@@ -15,7 +15,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -29,52 +37,13 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User() {
-    }
-
-    public User(Long id, String username, String password, boolean enabled) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.enabled = enabled;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     @Override
@@ -91,50 +60,4 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
-    public static class Builder {
-        private Long id;
-        private String username;
-        private String password;
-        private Role role;
-
-        public Builder() {
-        }
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder username(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder role(Role role) {
-            this.role = role;
-            return this;
-        }
-
-        public User build() {
-            User user = new User();
-            user.id = this.id;
-            user.username = this.username;
-            user.password = this.password;
-            user.role = this.role;
-            user.enabled = true;
-            return user;
-        }
-    }
-
-    // Static method to obtain the Builder instance
-    public static Builder builder() {
-        return new Builder();
-    }
-
 }
