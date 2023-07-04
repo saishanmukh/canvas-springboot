@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.springwebapp.canvas.model.User;
@@ -13,11 +15,6 @@ import com.springwebapp.canvas.repository.UserRepository;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
-    // @Autowired
-    // public UserService(UserRepository userRepository) {
-    //     this.userRepository = userRepository;
-    // }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -34,4 +31,13 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
+    }
+
 }
